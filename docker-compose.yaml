@@ -1,5 +1,17 @@
 version: "3"
 services:
+   graphql-engine:
+    image: hasura/graphql-engine:v1.0.0-alpha24
+    ports:
+    - "8080:8080"
+    depends_on:
+    - database
+    environment:
+    - "POSTGRES_PASSWORD:password"
+    command: >
+      /bin/sh -c "
+      graphql-engine --database-url postgres://root:password@database:5432/dbt serve --enable-console;
+      "
    database:
     image: postgres
     environment:
@@ -8,3 +20,11 @@ services:
       POSTGRES_DB: "dbt"
     ports:
       - "5432:5432"
+   database2:
+    image: postgres
+    environment:
+      POSTGRES_USER: "root"
+      POSTGRES_PASSWORD: "password"
+      POSTGRES_DB: "dbt"
+    ports:
+      - "5433:5432"
